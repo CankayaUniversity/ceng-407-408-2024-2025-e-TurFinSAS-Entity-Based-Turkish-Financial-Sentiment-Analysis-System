@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Paneli{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">👑 Admin Paneli</h2>
+
+<!-- İstatistik Kartları -->
+<div class="row text-center mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title">Toplam Kullanıcı</h5>
+                <p class="fs-3">{{ stats.total }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-danger text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title">Admin Sayısı</h5>
+                <p class="fs-3">{{ stats.admins }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-secondary text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title">Kullanıcı Sayısı</h5>
+                <p class="fs-3">{{ stats.regulars }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kullanıcı Tablosu -->
+{% if users|length == 0 %}
+    <div class="alert alert-warning text-center">Hiç kullanıcı yok 😢</div>
+{% else %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle shadow-sm text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>Rol</th>
+                    <th>Profil</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        {% if user.role == 'admin' %}
+                            <span class="badge bg-danger">Admin</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Kullanıcı</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.profile_picture %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ user.profile_picture) }}" width="40" height="40" class="rounded-circle border" style="object-fit:cover;">
+                        {% else %}
+                            <span class="text-muted">Yok</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('update_user', user_id=user.id) }}" class="btn btn-sm btn-warning">Güncelle</a>
+                        <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Bu kullanıcıyı silmek istediğine emin misin kral?')">Sil</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+<!-- Geri Dön Butonu -->
+<div class="text-center mt-4">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">👈 Geri Dön</a>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Hisse Karşılaştır{% endblock %}
+
+{% block content %}
+<div class="card p-4 shadow">
+    <h3 class="mb-4">📊 Hisse Senedi Karşılaştır</h3>
+
+    <form method="POST" class="row g-3 mb-4">
+        <div class="col-md-5">
+            <label>1. Hisse</label>
+            <select name="symbol1" class="form-select" required>
+                {% for s in symbols %}
+                    <option value="{{ s }}" {% if selected_1 == s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-5">
+            <label>2. Hisse</label>
+            <select name="symbol2" class="form-select" required>
+                {% for s in symbols %}
+                    <option value="{{ s }}" {% if selected_2 == s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 align-self-end">
+            <button class="btn btn-primary w-100">Karşılaştır</button>
+        </div>
+    </form>
+
+    {% if data1 and data2 %}
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <h5>{{ data1.label }}</h5>
+            <p>Fiyat: {{ data1.latest_price }} TL</p>
+            <p>1 Yıllık Değişim: 
+                {% if data1.percent_change >= 0 %}
+                    <span class="text-success">+{{ data1.percent_change }}%</span>
+                {% else %}
+                    <span class="text-danger">{{ data1.percent_change }}%</span>
+                {% endif %}
+            </p>
+            <canvas id="chart1" height="200"></canvas>
+        </div>
+        <div class="col-md-6 text-center">
+            <h5>{{ data2.label }}</h5>
+            <p>Fiyat: {{ data2.latest_price }} TL</p>
+            <p>1 Yıllık Değişim: 
+                {% if data2.percent_change >= 0 %}
+                    <span class="text-success">+{{ data2.percent_change }}%</span>
+                {% else %}
+                    <span class="text-danger">{{ data2.percent_change }}%</span>
+                {% endif %}
+            </p>
+            <canvas id="chart2" height="200"></canvas>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if data1 and data2 %}
+<script>
+const chart1 = new Chart(document.getElementById('chart1'), {
+    type: 'line',
+    data: {
+        labels: {{ data1.dates | tojson }},
+        datasets: [{
+            label: '{{ data1.label }}',
+            data: {{ data1.prices | tojson }},
+            borderColor: 'red',
+            tension: 0.3
+        }]
+    }
+});
+const chart2 = new Chart(document.getElementById('chart2'), {
+    type: 'line',
+    data: {
+        labels: {{ data2.dates | tojson }},
+        datasets: [{
+            label: '{{ data2.label }}',
+            data: {{ data2.prices | tojson }},
+            borderColor: 'green',
+            tension: 0.3
+        }]
+    }
+});
+</script>
+{% endif %}
+{% endblock %}
