@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" >
+
+  <title>Flask Template</title>
+
+
+  </head>
+
+  <body>
+
+    {% include 'navbar_public.html' %}
+
+    <main>
+
+      <h1>Home Page</h1>
+
+      <p>This is a public page that anyone can view.</p>
+      <p>Use this template to create and customize more public pages for your app.</p>
+
+    </main>
+
+    {% include 'footer.html' %}
+
+
+
+    <script src="{{ url_for('static', filename='scripts.js') }}" type="module"></script>
+  </body>
+
+</html>

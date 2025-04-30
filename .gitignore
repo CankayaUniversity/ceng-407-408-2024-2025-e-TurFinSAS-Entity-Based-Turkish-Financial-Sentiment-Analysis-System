@@ -34,6 +34,7 @@ venv.bak/
 .venv.bak/
 
 # Flask instance folder
+firebase-auth.json
 instance/
 *.db
 *.sqlite3
