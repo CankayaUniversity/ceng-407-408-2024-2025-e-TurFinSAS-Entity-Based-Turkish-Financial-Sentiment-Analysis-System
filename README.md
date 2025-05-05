@@ -17,3 +17,6 @@ This project aims to collect tweets shared on Twitter X about the top 100 compan
 
 # Advisor
 Dr. Gül TOKDEMİR
+
+## NER Model Files
+Click the link for the Turkish Named Entity Recognation (NER) model customized for BIST: https://drive.google.com/drive/folders/1UXAy07fcopcVe7cwXuWTWOtEmTpKpagW?usp=drive_link
