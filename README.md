@@ -26,9 +26,9 @@ Click the link for the Turkish Named Entity Recognation (NER) model customized f
 eTurFinsas is flask based application that allows users to see and track BIST100 stocks. Users can track informations about the stocks, compare them and see analysis about them.
 
 ## App Features:
-### User Authentication: Different app experience user to user
-### Stock Details: Users can see various stock details.
-### Real time data: App and models works with real time market data.
+User Authentication: Different app experience user to user
+Stock Details: Users can see various stock details.
+Real time data: App and models works with real time market data.
 
 ## e-TurFinSAS User Guide
 ## Login/Sign Up
