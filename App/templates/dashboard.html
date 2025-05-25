@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+{% block title %}Kontrol Paneli{% endblock %}
+
+{% block content %}
+<div class="card shadow p-4">
+    <!-- Profil + Mesaj -->
+    <div class="d-flex flex-column align-items-center justify-content-center gap-2 mb-3">
+        {% if profile_picture %}
+            <img src="{{ url_for('static', filename='uploads/' ~ profile_picture) }}" class="profile-pic" alt="Profil Fotoğrafı">
+        {% else %}
+            <div class="profile-pic d-inline-block border border-primary"
+                 style="width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <span class="text-muted fs-6">Profil Yok</span>
+            </div>
+        {% endif %}
+        <h2 class="fs-4 m-0">{{ mesaj }}</h2>
+    </div>
+
+    <!-- Sekmeler -->
+    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'list' %}active{% endif %}" id="list-tab"
+                    data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab">📄 Hisse Tablosu</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'compare' %}active{% endif %}" id="compare-tab"
+                    data-bs-toggle="tab" data-bs-target="#compare" type="button" role="tab">📈 Hisse Karşılaştır</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'detail' %}active{% endif %}" id="detail-tab"
+                    data-bs-toggle="tab" data-bs-target="#detail" type="button" role="tab">📉 Detaylı Analiz</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link {% if active_tab == 'predict' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#predict">📊 Tahmin</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'fav' %}active{% endif %}" id="fav-tab"
+                    data-bs-toggle="tab" data-bs-target="#fav" type="button" role="tab">⭐ Favorilerim</button>
+        </li>
+
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <!-- 📄 Hisse Tablosu -->
+        <div class="tab-pane fade {% if active_tab == 'list' %}show active{% endif %}" id="list" role="tabpanel">
+            <div class="table-responsive mt-3">
+                <table id="bistTable" class="table table-striped table-hover table-bordered align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Şirket</th>
+                            <th>Sembol</th>
+                            <th>Fiyat</th>
+                            <th>Değişim</th>
+                            <th>Saat</th>
+                            <th>Favori</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hisse in bist_data %}
+                        <tr>
+                            <td>{{ hisse.name }}</td>
+                            <td class="text-muted">{{ hisse.symbol }}</td>
+                            <td>{{ '%.2f' % hisse.price }}</td>
+                            <td>
+                                {% if hisse.change >= 0 %}
+                                    <span class="text-success">+{{ '%.2f' % hisse.change }} ({{ '%.2f' % hisse.change_percent }}%)</span>
+                                {% else %}
+                                    <span class="text-danger">{{ '%.2f' % hisse.change }} ({{ '%.2f' % hisse.change_percent }}%)</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ hisse.time }}</td>
+                            <td>
+                                <button class="btn toggle-fav-btn {% if hisse.symbol in favori_semboller %}btn-warning{% else %}btn-outline-secondary{% endif %}"
+                                        data-symbol="{{ hisse.symbol }}">
+                                    {% if hisse.symbol in favori_semboller %}💛{% else %}🤍{% endif %}
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 📈 Hisse Karşılaştır -->
+        <div class="tab-pane fade {% if active_tab == 'compare' %}show active{% endif %}" id="compare" role="tabpanel">
+            <form method="POST" action="{{ url_for('dashboard') }}" class="row g-3 mt-3">
+                <input type="hidden" name="tab" value="compare">
+                <div class="col-md-5">
+                    <label>1. Hisse</label>
+                    <select name="symbol1" class="form-select" required>
+                        {% for s in symbols %}
+                            <option value="{{ s }}" {% if selected_1 == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label>2. Hisse</label>
+                    <select name="symbol2" class="form-select" required>
+                        {% for s in symbols %}
+                            <option value="{{ s }}" {% if selected_2 == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button class="btn btn-primary w-100">Karşılaştır</button>
+                </div>
+            </form>
+
+            {% if data1 and data2 %}
+            <div class="row mt-4">
+                <div class="col-md-6 text-center">
+                    <h5>{{ data1.label }}</h5>
+                    <p>Fiyat: {{ data1.latest_price }} TL</p>
+                    <p>1 Yıllık:
+                        {% if data1.percent_change >= 0 %}
+                            <span class="text-success">+{{ data1.percent_change }}%</span>
+                        {% else %}
+                            <span class="text-danger">{{ data1.percent_change }}%</span>
+                        {% endif %}
+                    </p>
+                    <canvas id="chart1" height="200"></canvas>
+                </div>
+                <div class="col-md-6 text-center">
+                    <h5>{{ data2.label }}</h5>
+                    <p>Fiyat: {{ data2.latest_price }} TL</p>
+                    <p>1 Yıllık:
+                        {% if data2.percent_change >= 0 %}
+                            <span class="text-success">+{{ data2.percent_change }}%</span>
+                        {% else %}
+                            <span class="text-danger">{{ data2.percent_change }}%</span>
+                        {% endif %}
+                    </p>
+                    <canvas id="chart2" height="200"></canvas>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 📉 Detaylı Analiz -->
+        <div class="tab-pane fade {% if active_tab == 'detail' %}show active{% endif %}" id="detail" role="tabpanel">
+            <form method="POST" action="{{ url_for('dashboard') }}" class="row g-3 mb-3">
+                <input type="hidden" name="tab" value="detail">
+                <div class="col-md-5">
+                    <label for="detail_symbol">Hisse Seç:</label>
+                    <select class="form-select" name="detail_symbol" id="detail_symbol">
+                        {% for s in symbols %}
+                            <option value="{{ s }}" {% if selected_detail_symbol == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="detail_range">Zaman Aralığı:</label>
+                    <select class="form-select" name="detail_range" id="detail_range">
+                        <option value="1d" {% if selected_detail_range == '1d' %}selected{% endif %}>1 Gün</option>
+                        <option value="7d" {% if selected_detail_range == '7d' %}selected{% endif %}>7 Gün</option>
+                        <option value="1mo" {% if selected_detail_range == '1mo' %}selected{% endif %}>1 Ay</option>
+                        <option value="3mo" {% if selected_detail_range == '3mo' %}selected{% endif %}>3 Ay</option>
+                        <option value="6mo" {% if selected_detail_range == '6mo' %}selected{% endif %}>6 Ay</option>
+                        <option value="1y" {% if selected_detail_range == '1y' or not selected_detail_range %}selected{% endif %}>1 Yıl</option>
+                    </select>
+                </div>
+                <div class="col-md-3 align-self-end">
+                    <button class="btn btn-primary w-100">Göster</button>
+                </div>
+            </form>
+
+            {% if detail_data %}
+            <div class="text-center">
+                <h4>{{ detail_data.label }} Analizi</h4>
+                <p>Fiyat: {{ detail_data.latest_price }} TL</p>
+                <p>Değişim: <span class="{% if detail_data.percent_change >= 0 %}text-success{% else %}text-danger{% endif %}">
+                    {{ detail_data.percent_change }}%
+                </span></p>
+                <canvas id="detail_chart" height="200"></canvas>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 📊 Tahmin -->
+        <div class="tab-pane fade {% if active_tab == 'predict' %}show active{% endif %}" id="predict" role="tabpanel">
+            <form method="POST" action="{{ url_for('dashboard') }}" class="row g-3 mt-3">
+                <input type="hidden" name="tab" value="predict">
+                <div class="col-md-12">
+                    <label for="ticker" class="form-label">Tahmin etmek istediğiniz hisse:</label>
+                    <select name="ticker" id="ticker" class="form-select" required>
+                        {% for t in tickers %}
+                            <option value="{{ t }}" {% if selected_ticker == t %}selected{% endif %}>{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary w-100">Tahmini Göster</button>
+                </div>
+            </form>
+
+            {% if result %}
+                <div class="alert alert-success mt-4">
+                    <strong>Tahmin Sonucu:</strong> {{ result }}%
+                </div>
+            {% elif error %}
+                <div class="alert alert-danger mt-4">
+                    <strong>Hata:</strong> {{ error }}
+                </div>
+            {% endif %}
+        </div>
+
+
+        <!-- ⭐ Favorilerim -->
+        <div class="tab-pane fade {% if active_tab == 'fav' %}show active{% endif %}" id="fav" role="tabpanel">
+            {% if favorilerim %}
+            <div class="table-responsive mt-3">
+                <table id="favTable" class="table table-striped table-bordered text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Şirket</th>
+                            <th>Sembol</th>
+                            <th>Fiyat</th>
+                            <th>Değişim</th>
+                            <th>Saat</th>
+                            <th>Favori</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hisse in favorilerim %}
+                        <tr>
+                            <td>{{ hisse.name }}</td>
+                            <td>{{ hisse.symbol }}</td>
+                            <td>{{ '%.2f' % hisse.price }}</td>
+                            <td>
+                                {% if hisse.change >= 0 %}
+                                    <span class="text-success">+{{ '%.2f' % hisse.change }} ({{ '%.2f' % hisse.change_percent }}%)</span>
+                                {% else %}
+                                    <span class="text-danger">{{ '%.2f' % hisse.change }} ({{ '%.2f' % hisse.change_percent }}%)</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ hisse.time }}</td>
+                            <td>
+                                <button class="btn toggle-fav-btn {% if hisse.symbol in favori_semboller %}btn-warning{% else %}btn-outline-secondary{% endif %}"
+                                        data-symbol="{{ hisse.symbol }}">
+                                    {% if hisse.symbol in favori_semboller %}💛{% else %}🤍{% endif %}
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mt-4">Henüz favori hissen yok 😔</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#bistTable').DataTable();
+    $('#favTable').DataTable();
+
+    $(document).on("click", ".toggle-fav-btn", function (e) {
+        e.preventDefault();
+        const symbol = $(this).data("symbol");
+        const button = $(this);
+        fetch(/toggle-favorite/${symbol}, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'added') {
+                button.removeClass("btn-outline-secondary").addClass("btn-warning").text("💛");
+            } else {
+                button.removeClass("btn-warning").addClass("btn-outline-secondary").text("🤍");
+            }
+            setTimeout(() => {
+                window.location.reload();
+            }, 200);
+        });
+    });
+});
+</script>
+
+{% if data1 and data2 %}
+<script>
+new Chart(document.getElementById('chart1'), {
+    type: 'line',
+    data: {
+        labels: {{ data1.dates | tojson }},
+        datasets: [{
+            label: '{{ data1.label }}',
+            data: {{ data1.prices | tojson }},
+            borderColor: 'red',
+            tension: 0.3
+        }]
+    }
+});
+new Chart(document.getElementById('chart2'), {
+    type: 'line',
+    data: {
+        labels: {{ data2.dates | tojson }},
+        datasets: [{
+            label: '{{ data2.label }}',
+            data: {{ data2.prices | tojson }},
+            borderColor: 'green',
+            tension: 0.3
+        }]
+    }
+});
+</script>
+{% endif %}
+
+{% if detail_data %}
+<script>
+new Chart(document.getElementById('detail_chart'), {
+    type: 'line',
+    data: {
+        labels: {{ detail_data.dates | tojson }},
+        datasets: [{
+            label: '{{ detail_data.label }}',
+            data: {{ detail_data.prices | tojson }},
+            borderColor: 'blue',
+            tension: 0.3
+        }]
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

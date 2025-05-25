@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" >
+
+  <title>Flask Template</title>
+
+
+  </head>
+
+  <body>
+
+    {% include 'navbar_public.html' %}
+
+    <main>
+
+      <h1>Privacy Policy</h1>
+
+      <p>   We are dedicated to protecting your privacy and to being transparent about how we
+handle your personal data. This privacy policy, as amended from time to time, explains
+how we collect, use and share your personal data (the “Policy”). We may change this
+Policy from time to time in order to keep you apprised of our data collection and use
+practices. By accessing and using the Platform, you agree to the practices described in
+this Policy and consent to the collection and use of your information in the manner set
+out herein. We encourage you to review this Policy carefully and to periodically refer to
+it so that you understand any subsequent amendments.
+IF YOU DO NOT AGREE TO THE TERMS OF THIS POLICY, PLEASE STOP USING THE
+PLATFORM IMMEDIATELY.
+IN ADDITION TO THIS POLICY, PLEASE REVIEW OUR TERMS AND CONDITIONS
+AND COOKIE POLICY, WHICH ARE INCORPORATED HEREIN BY REFERENCE,
+TOGETHER WITH SUCH OTHER POLICIES OF WHICH YOU MAY BE NOTIFIED OF BY
+          US FROM TIME TO TIME.</p>
+        <p>
+        For the avoidance of doubt, this Policy details how we handle any personal data. Once
+any data has been anonymized and aggregated, so that it can no longer identify a
+person, it shall no longer be considered personal data, and this Policy shall no longer
+apply to such information.
+As used in this Policy, "personal data" means any information that relates to you as a
+natural person, from which you can be identified.</p>
+
+    </main>
+
+    {% include 'footer.html' %}
+
+
+
+    <script src="{{ url_for('static', filename='scripts.js') }}" type="module"></script>
+  </body>
+
+</html>

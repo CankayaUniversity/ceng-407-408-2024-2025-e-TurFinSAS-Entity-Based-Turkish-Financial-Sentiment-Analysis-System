@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Sunucu Hatası{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="display-4 text-danger">500</h1>
+    <p class="lead">Bir hata oluştu kral 👑 Sunucu şu an meşgul olabilir.</p>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary mt-3">Kontrol Paneline Dön</a>
+</div>
+{% endblock %}

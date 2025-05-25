@@ -1,0 +1,23 @@
+<div class="navbar">
+    <div class="navbar-left">
+        <img src="{{ url_for('static', filename='uploads/3507cf13-0795-4600-a865-a6b08020de94.png') }}" alt="e-TurFinSAS Logo" class="navbar-logo">
+        <span class="navbar-title">e-TurFinSAS</span>
+    </div>
+
+    <span class="hamburger">&#9776;</span> <!-- Hamburger Icon -->
+
+    <div class="navbar-right" id="navbarRight">
+        <span class="closebtn">&times;</span>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="#contact">News</a>
+        <a href="/login">Actions</a>
+        <div class="dropdown">
+            <a class="dropbtn" id="dropBtn">Account</a>
+            <div class="dropdown-content">
+                <a href="#news1">Profile</a>
+                <a href="#news2">Settings</a>
+                <a id="sign-out-btn" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>

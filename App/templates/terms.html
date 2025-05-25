@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+  <title>Flask Template</title>
+
+
+  </head>
+
+  <body>
+
+    {% include 'navbar_public.html' %}
+
+    <main>
+
+      <h1>Terms of Service</h1>
+
+      <p>1. Changes to the Terms and Conditions
+We reserve the right to amend, remove, or add to these Terms at any time. Please check the
+“Last modified” heading at the bottom of this document to see when the Terms were last
+updated. Any changes to the Terms will become effective immediately after they are posted.
+Your continued use of the Services following any changes to the Terms means that you accept
+the updated Terms.
+If, at any time, you decide that you do not accept these Terms, you are requested to
+immediately cease any further use of the Services. Any terms and conditions proposed by you
+which are in addition to, or which conflict with these Terms are expressly rejected by the Group
+and will have no force or effect. For Special Conditions applicable to certain products and
+services offered and available as part of the Services (Including, without limitation,
+          InvestingPro, InvestingPro+ or ProPicks AI), please see additional terms below.</p>
+    <p>2. Changes to the Services
+You understand and agree that We may discontinue or change all or any portion of the Services
+at any time, without notice. Furthermore, we may decide, at our sole discretion, to impose
+certain fees or other conditions in order to access and use any portion of the Service at any
+time. You also understand and agree that Fusion Media may discontinue or restrict your use of
+        the Services for any reason without notice.</p>
+        <p>3. Risk Disclaimer
+Trading in financial instruments, including without limitation, stocks, bonds, cryptocurrencies,
+CFDs and Forex, involves high risks, including the risk of losing your investment amount, and
+may not be suitable for all investors. Trading on margin substantially increases the financial
+risks. Using a high level of leverage to conduct financial transactions (including, without
+
+limitation, foreign exchange transactions) involves the risk that borrowing costs will be higher
+than the income which is derived from the assets. The result of the above is that even a slight
+fluctuation of the market could mean substantial gains when these fluctuations are in your
+favor, but that could also mean substantial losses if the fluctuations are to your detriment. You
+alone are responsible for any losses you may incur as a result of your reliance on the Services
+and any information, data, article or other content (the “Content”) accessed by you through
+the Services. Before making any investment, we strongly urge you to seek advice from a
+        licensed financial advisor. For more information, please see our Risk Warning.</p>
+    <p>4. No Investment Advice
+The Services and the Content are provided to you solely for your general informational
+purposes, and should not be considered as legal, tax, accounting, financial or investment
+advice. Investing.com is not a licensed securities dealer, broker, investment adviser,
+investment bank and does not provide any financial services. Nothing in the Services
+represents a recommendation to buy or sell any financial instrument, nor does it reflect the
+views of the Group or its management, employees or consultants. You are solely responsible
+for determining whether any investment is suitable for you, considering your investment
+objectives, risk tolerance and personal financial situation. It is also your responsibility to
+evaluate the merits and risks of using the information provided on this site before making any
+decisions.</p>
+
+    </main>
+
+    {% include 'footer.html' %}
+
+
+
+    <script src="{{ url_for('static', filename='scripts.js') }}" type="module"></script>
+  </body>
+
+</html>
