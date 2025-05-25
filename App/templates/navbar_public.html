@@ -1,10 +1,13 @@
 <div class="navbar">
-    <img class="logo-img" src="{{ url_for('static', filename='images/default_logo.png') }}" />
+    <div class="navbar-left">
+        <img src="{{ url_for('static', filename='uploads/logo.png') }}" alt="e-TurFinSAS Logo" class="navbar-logo">
+
+        <span class="navbar-title">e-TurFinSAS</span>
+    </div>
     <span class="hamburger">&#9776;</span> <!-- Hamburger Icon -->
     <div class="navbar-right" id="navbarRight">
         <span class="closebtn">&times;</span>
         <a href="{{ url_for('home') }}">Home</a>
-        <!-- Dropdown for News -->
         <div class="dropdown">
             <a class="dropbtn" id="dropBtn">About</a>
             <div class="dropdown-content">

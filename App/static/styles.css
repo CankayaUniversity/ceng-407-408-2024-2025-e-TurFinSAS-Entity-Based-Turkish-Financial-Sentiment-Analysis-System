@@ -11,15 +11,15 @@
 
     --primary-font: 'Poppins', sans-serif;
     --seconday-font: 'Poppins', sans-serif;
-    
+
     --border-width: 3px;
     --element-border-radius: 5px;
-    
+
     --button-height: 5px;
     --small-button-height: 2px;
-    
+
     --element-padding: 0.8em;
-    
+
     --maximum-width: 320px;
 }
 
@@ -62,13 +62,11 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--primary-color);
-    color: black;
+    background: linear-gradient(90deg, #00B4DB, #0083B0);
+    color: white;
     box-shadow: 0px 8px 16px -4px rgba(128, 128, 128, 0.2);
-
-
     width: 100%;
-    
+
 }
 
 .logo-img {
@@ -84,7 +82,7 @@ main {
 
 .navbar a {
     text-decoration: none;
-    color: black;
+    color: white;
     padding: 1.5rem 2rem;
     text-align: center;
     font-size: 1.3rem;
@@ -92,13 +90,14 @@ main {
 
 .navbar-right {
     display: flex;
-    align-items: center; 
+    align-items: center;
     margin-right: 2rem;
 }
 
 .navbar a:hover {
-    background-color: #ddd;
-    color: black;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 5px;
 }
 
 
@@ -120,7 +119,7 @@ main {
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     margin-top: 1.5rem;
-    right: 0; 
+    right: 0;
     left: auto;
     white-space: nowrap;
 }
@@ -187,7 +186,7 @@ input, button {
 
 
 
-  
+
 
 
 
@@ -203,48 +202,41 @@ input, button {
 }
 
 .login-form-container {
-    display: flex;
-    justify-content: center;
-    /* align-items: center;  */
-    width: 100%;
-    max-width: 400px;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 2rem;
+    max-width: 320px;
+    padding: 15px 20px;
+    margin: 1rem 0; /* Üstten ve alttan 1rem boşluk */
 }
 
 .login-form {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     width: 100%;
 }
-  
+
 .login-form h2 {
     text-align: center;
     margin-bottom: 20px;
 }
-  
+
 .input-group {
     margin-bottom: 20px;
 }
-  
+
 .input-group label {
     display: block;
     margin-bottom: 5px;
 }
-  
+
 .input-group input {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     width: calc(100% - 20px);
 }
-  
+
 .input-group, .login-btn, .google-login-btn {
-    width: 100%; 
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -277,7 +269,7 @@ input, button {
     justify-content: center;
     align-items: center;
     gap: 0.5em;
-    border: 1px solid rgba(0, 0, 0, 0.25);  
+    border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .google-login-btn:hover {
@@ -368,15 +360,15 @@ footer {
 
 
     .navbar-right {
-        position: fixed; 
+        position: fixed;
         top: 0;
-        left: -100%; 
+        left: -100%;
         flex-direction: column;
-        justify-content: center; 
-        align-items: center; 
+        justify-content: center;
+        align-items: center;
         width: 100%;
         height: 100vh;
-        background-color: var(--primary-color); 
+        background-color: var(--primary-color);
         overflow-x: hidden; /* Prevent horizontal scroll */
         overflow-y: auto;
         transition: 0.5s; /* Smooth transition for sliding in/out */
@@ -395,7 +387,7 @@ footer {
     }
 
     .navbar a:hover {
-        
+
         background-color: inherit;
     }
 
@@ -412,7 +404,7 @@ footer {
         margin-top: 0;
         box-shadow: none;
         overflow-y: auto;
-        
+
     }
 
     .dropdown-content a {
@@ -446,3 +438,49 @@ footer {
         padding: 0;
     }
 }
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-left: 1rem;
+}
+
+.navbar-logo {
+    width: 40px;
+    height: auto;
+}
+
+.navbar-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: white;
+}
+
+
+body {
+    background: url("/static/uploads/background.png") no-repeat center center fixed;
+    background-size: cover;
+    font-family: var(--primary-font);
+    color: var(--dark-color);
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+.auth-page_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 120px); /* Tam ekran kapla ama üst navbarı hesaba kat */
+    padding: 1rem;
+    max-width: 400px; /* Genişliği sınırla */
+    margin: 0 auto;
+    backdrop-filter: blur(4px);
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+
+
+}
+

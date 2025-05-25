@@ -16,18 +16,6 @@
         <h2 class="fs-4 m-0">{{ mesaj }}</h2>
     </div>
 
-    <!-- Admin Panel Butonu -->
-    {% if is_admin %}
-    <div class="alert alert-warning text-center mt-2">
-        <strong>⚠️ Yönetici:</strong> Bu hesabın yönetici yetkileri vardır.
-    </div>
-    <div class="text-center mb-3">
-        <a href="{{ url_for('admin_panel') }}" id="admin-panel-btn" class="btn btn-outline-dark btn-lg">
-            🔧 Admin Paneline Git
-        </a>
-    </div>
-    {% endif %}
-
     <!-- Sekmeler -->
     <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -42,13 +30,18 @@
             <button class="nav-link {% if active_tab == 'detail' %}active{% endif %}" id="detail-tab"
                     data-bs-toggle="tab" data-bs-target="#detail" type="button" role="tab">📉 Detaylı Analiz</button>
         </li>
+        <li class="nav-item">
+            <button class="nav-link {% if active_tab == 'predict' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#predict">📊 Tahmin</button>
+        </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link {% if active_tab == 'fav' %}active{% endif %}" id="fav-tab"
                     data-bs-toggle="tab" data-bs-target="#fav" type="button" role="tab">⭐ Favorilerim</button>
         </li>
+
     </ul>
 
     <div class="tab-content" id="myTabContent">
+        <!-- 📄 Hisse Tablosu -->
         <div class="tab-pane fade {% if active_tab == 'list' %}show active{% endif %}" id="list" role="tabpanel">
             <div class="table-responsive mt-3">
                 <table id="bistTable" class="table table-striped table-hover table-bordered align-middle text-center">
@@ -89,7 +82,7 @@
             </div>
         </div>
 
-        <!-- Karşılaştırma -->
+        <!-- 📈 Hisse Karşılaştır -->
         <div class="tab-pane fade {% if active_tab == 'compare' %}show active{% endif %}" id="compare" role="tabpanel">
             <form method="POST" action="{{ url_for('dashboard') }}" class="row g-3 mt-3">
                 <input type="hidden" name="tab" value="compare">
@@ -115,36 +108,36 @@
             </form>
 
             {% if data1 and data2 %}
-                <div class="row mt-4">
-                    <div class="col-md-6 text-center">
-                        <h5>{{ data1.label }}</h5>
-                        <p>Fiyat: {{ data1.latest_price }} TL</p>
-                        <p>1 Yıllık:
-                            {% if data1.percent_change >= 0 %}
-                                <span class="text-success">+{{ data1.percent_change }}%</span>
-                            {% else %}
-                                <span class="text-danger">{{ data1.percent_change }}%</span>
-                            {% endif %}
-                        </p>
-                        <canvas id="chart1" height="200"></canvas>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <h5>{{ data2.label }}</h5>
-                        <p>Fiyat: {{ data2.latest_price }} TL</p>
-                        <p>1 Yıllık:
-                            {% if data2.percent_change >= 0 %}
-                                <span class="text-success">+{{ data2.percent_change }}%</span>
-                            {% else %}
-                                <span class="text-danger">{{ data2.percent_change }}%</span>
-                            {% endif %}
-                        </p>
-                        <canvas id="chart2" height="200"></canvas>
-                    </div>
+            <div class="row mt-4">
+                <div class="col-md-6 text-center">
+                    <h5>{{ data1.label }}</h5>
+                    <p>Fiyat: {{ data1.latest_price }} TL</p>
+                    <p>1 Yıllık:
+                        {% if data1.percent_change >= 0 %}
+                            <span class="text-success">+{{ data1.percent_change }}%</span>
+                        {% else %}
+                            <span class="text-danger">{{ data1.percent_change }}%</span>
+                        {% endif %}
+                    </p>
+                    <canvas id="chart1" height="200"></canvas>
                 </div>
+                <div class="col-md-6 text-center">
+                    <h5>{{ data2.label }}</h5>
+                    <p>Fiyat: {{ data2.latest_price }} TL</p>
+                    <p>1 Yıllık:
+                        {% if data2.percent_change >= 0 %}
+                            <span class="text-success">+{{ data2.percent_change }}%</span>
+                        {% else %}
+                            <span class="text-danger">{{ data2.percent_change }}%</span>
+                        {% endif %}
+                    </p>
+                    <canvas id="chart2" height="200"></canvas>
+                </div>
+            </div>
             {% endif %}
         </div>
 
-         <!-- Detaylı Analiz -->
+        <!-- 📉 Detaylı Analiz -->
         <div class="tab-pane fade {% if active_tab == 'detail' %}show active{% endif %}" id="detail" role="tabpanel">
             <form method="POST" action="{{ url_for('dashboard') }}" class="row g-3 mb-3">
                 <input type="hidden" name="tab" value="detail">
@@ -156,7 +149,6 @@
                         {% endfor %}
                     </select>
                 </div>
-
                 <div class="col-md-4">
                     <label for="detail_range">Zaman Aralığı:</label>
                     <select class="form-select" name="detail_range" id="detail_range">
@@ -168,7 +160,6 @@
                         <option value="1y" {% if selected_detail_range == '1y' or not selected_detail_range %}selected{% endif %}>1 Yıl</option>
                     </select>
                 </div>
-
                 <div class="col-md-3 align-self-end">
                     <button class="btn btn-primary w-100">Göster</button>
                 </div>
@@ -186,7 +177,36 @@
             {% endif %}
         </div>
 
-        <!-- Favoriler -->
+        <!-- 📊 Tahmin -->
+        <div class="tab-pane fade {% if active_tab == 'predict' %}show active{% endif %}" id="predict" role="tabpanel">
+            <form method="POST" action="{{ url_for('dashboard') }}" class="row g-3 mt-3">
+                <input type="hidden" name="tab" value="predict">
+                <div class="col-md-12">
+                    <label for="ticker" class="form-label">Tahmin etmek istediğiniz hisse:</label>
+                    <select name="ticker" id="ticker" class="form-select" required>
+                        {% for t in tickers %}
+                            <option value="{{ t }}" {% if selected_ticker == t %}selected{% endif %}>{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary w-100">Tahmini Göster</button>
+                </div>
+            </form>
+
+            {% if result %}
+                <div class="alert alert-success mt-4">
+                    <strong>Tahmin Sonucu:</strong> {{ result }}%
+                </div>
+            {% elif error %}
+                <div class="alert alert-danger mt-4">
+                    <strong>Hata:</strong> {{ error }}
+                </div>
+            {% endif %}
+        </div>
+
+
+        <!-- ⭐ Favorilerim -->
         <div class="tab-pane fade {% if active_tab == 'fav' %}show active{% endif %}" id="fav" role="tabpanel">
             {% if favorilerim %}
             <div class="table-responsive mt-3">
@@ -233,25 +253,19 @@
     </div>
 </div>
 
-<!-- Gerekli JS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
     $('#bistTable').DataTable();
     $('#favTable').DataTable();
-    updateThemeButtons();
 
     $(document).on("click", ".toggle-fav-btn", function (e) {
         e.preventDefault();
         const symbol = $(this).data("symbol");
         const button = $(this);
-
-        fetch(`/toggle-favorite/${symbol}`, {
+        fetch(/toggle-favorite/${symbol}, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -266,55 +280,57 @@
             } else {
                 button.removeClass("btn-warning").addClass("btn-outline-secondary").text("🤍");
             }
-
-            // ✅ Sayfa otomatik yenilensin
             setTimeout(() => {
                 window.location.reload();
-            }, 200);  // 0.2 saniye sonra yenile
+            }, 200);
         });
     });
 });
-    {% if detail_data %}
-    new Chart(document.getElementById('detail_chart'), {
-        type: 'line',
-        data: {
-            labels: {{ detail_data.dates | tojson }},
-            datasets: [{
-                label: '{{ detail_data.label }}',
-                data: {{ detail_data.prices | tojson }},
-                borderColor: 'blue',
-                tension: 0.3
-            }]
-        }
-    });
-    {% endif %}
-
-    {% if data1 and data2 %}
-    new Chart(document.getElementById('chart1'), {
-        type: 'line',
-        data: {
-            labels: {{ data1.dates | tojson }},
-            datasets: [{
-                label: '{{ data1.label }}',
-                data: {{ data1.prices | tojson }},
-                borderColor: 'red',
-                tension: 0.3
-            }]
-        }
-    });
-
-    new Chart(document.getElementById('chart2'), {
-        type: 'line',
-        data: {
-            labels: {{ data2.dates | tojson }},
-            datasets: [{
-                label: '{{ data2.label }}',
-                data: {{ data2.prices | tojson }},
-                borderColor: 'green',
-                tension: 0.3
-            }]
-        }
-    });
-    {% endif %}
 </script>
+
+{% if data1 and data2 %}
+<script>
+new Chart(document.getElementById('chart1'), {
+    type: 'line',
+    data: {
+        labels: {{ data1.dates | tojson }},
+        datasets: [{
+            label: '{{ data1.label }}',
+            data: {{ data1.prices | tojson }},
+            borderColor: 'red',
+            tension: 0.3
+        }]
+    }
+});
+new Chart(document.getElementById('chart2'), {
+    type: 'line',
+    data: {
+        labels: {{ data2.dates | tojson }},
+        datasets: [{
+            label: '{{ data2.label }}',
+            data: {{ data2.prices | tojson }},
+            borderColor: 'green',
+            tension: 0.3
+        }]
+    }
+});
+</script>
+{% endif %}
+
+{% if detail_data %}
+<script>
+new Chart(document.getElementById('detail_chart'), {
+    type: 'line',
+    data: {
+        labels: {{ detail_data.dates | tojson }},
+        datasets: [{
+            label: '{{ detail_data.label }}',
+            data: {{ detail_data.prices | tojson }},
+            borderColor: 'blue',
+            tension: 0.3
+        }]
+    }
+});
+</script>
+{% endif %}
 {% endblock %}

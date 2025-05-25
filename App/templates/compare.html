@@ -33,7 +33,7 @@
         <div class="col-md-6 text-center">
             <h5>{{ data1.label }}</h5>
             <p>Fiyat: {{ data1.latest_price }} TL</p>
-            <p>1 Yıllık Değişim: 
+            <p>1 Yıllık Değişim:
                 {% if data1.percent_change >= 0 %}
                     <span class="text-success">+{{ data1.percent_change }}%</span>
                 {% else %}
@@ -45,7 +45,7 @@
         <div class="col-md-6 text-center">
             <h5>{{ data2.label }}</h5>
             <p>Fiyat: {{ data2.latest_price }} TL</p>
-            <p>1 Yıllık Değişim: 
+            <p>1 Yıllık Değişim:
                 {% if data2.percent_change >= 0 %}
                     <span class="text-success">+{{ data2.percent_change }}%</span>
                 {% else %}
